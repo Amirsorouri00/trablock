@@ -1,0 +1,12 @@
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4b8d10826d07..467d26046416 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1280,7 +1280,6 @@ struct task_struct {
+ 	unsigned long			lowest_stack;
+ 	unsigned long			prev_lowest_stack;
+ #endif
+-	unsigned long			sync_counter;	// Sorouri
+ 
+ 	/*
+ 	 * New fields for task_struct should be added above here, so that

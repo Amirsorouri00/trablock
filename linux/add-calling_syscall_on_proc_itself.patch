@@ -1,0 +1,42 @@
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index d19566bc9bc2..357aa7bef6c0 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -265,23 +265,6 @@ static ssize_t process_vm_rw(pid_t pid,
+ 	struct iov_iter iter;
+ 	ssize_t rc;
+ 	int dir = vm_write ? WRITE : READ;
+-	//struct task_struct *current_task_called = NULL;
+-
+-	// sorouri
+-
+-	if (current->pid == pid)
+-	{
+-		if (dir == READ)
+-		{
+-			printk("a reader has jut requested to block-free wait: %u %lu\n", pid, current->sync_counter);
+-			current->sync_counter += liovcnt;
+-			// maye adding some scheduling codes to release the CPU.
+-			rc = 0;
+-			goto free_iovecs;
+-		}
+-	}
+-
+-	// sorouri
+ 
+ 	if (flags != 0)
+ 		return -EINVAL;
+@@ -300,13 +283,6 @@ static ssize_t process_vm_rw(pid_t pid,
+ 
+ 	rc = process_vm_rw_core(pid, &iter, iov_r, riovcnt, flags, vm_write);
+ 
+-	// change current_task_called to the target
+-	if (dir == WRITE)
+-	{
+-		//current_task_called->sync_counter = current_task_called->sync_counter < riovcnt ? 0 : current_task_called->sync_counter - riovcnt;
+-		printk("a reader has jut requested to block-free wait: %u %lu\n", pid, riovcnt);
+-	}
+-
+ free_iovecs:
+ 	if (iov_r != iovstack_r)
+ 		kfree(iov_r);
