@@ -11,7 +11,9 @@ This repository includes all contributions into [linux, mpich, gromacs, flowVR] 
 * https://github.com/Amirsorouri00/linux
 * https://www.linuxjournal.com/article/10165
 * http://man7.org/linux/man-pages/man5/proc.5.html
-
+* https://askubuntu.com/questions/656771/process-niceness-vs-priority
+* https://linux.die.net/man/3/setpriority
+* https://www.cyberciti.biz/faq/howto-set-real-time-scheduling-priority-process/
 
 ## Commands to remember
 ````
