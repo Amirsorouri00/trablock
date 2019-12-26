@@ -1,0 +1,36 @@
+commit f856d2f8cc86100cf4edcd5285241936141ed386 (HEAD -> master)
+Author: Amir Hossein <amirsorouri26@gmail.com>
+Date:   Sun Dec 15 18:59:49 2019 +0330
+
+    sync_counter in task_struct added for future checking in cpu time-slot scheduling process.
+
+commit 0a91da43c0ee7090cb5577ef1227606ec5e6aaf0
+Author: Amir Hossein <amirsorouri26@gmail.com>
+Date:   Sun Dec 15 18:58:50 2019 +0330
+
+    changes in process_vm_rw func  to be able to log when a process calls the sys-call on its own pid. it worked
+
+commit d52c00859ab2f0d0b5cdb123da0173476fb573b2 (origin/master)
+Author: Amir Hossein <amirsorouri26@gmail.com>
+Date:   Sun Dec 15 18:21:49 2019 +0330
+
+    nothing important
+
+commit 9455d25f4e3b3d009fa1b810862e5b06229530e4
+Merge: 737214515d79 9b5b99a89f64
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat Dec 7 18:38:17 2019 -0800
+
+    Merge tag 'ntb-5.5' of git://github.com/jonmason/ntb
+    
+    Pull NTB update from Jon Mason:
+     "Just a simple patch to add a new Hygon Device ID to the AMD NTB device
+      driver"
+    
+    * tag 'ntb-5.5' of git://github.com/jonmason/ntb:
+      NTB: Add Hygon Device ID
+
+commit 737214515d7965485c52bc5f869e57a6976cf216
+Merge: 95207d554b96 afbd65f5e71a
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat Dec 7 18:33:01 2019 -0800

@@ -1,0 +1,14 @@
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index e591d40fd645..69334e79ad52 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1575,6 +1575,9 @@ static struct task_struct *pick_next_task_rt(struct rq *rq)
+ 		return NULL;
+ 
+ 	p = _pick_next_task_rt(rq);
++	// sorouri
++	printk("HHHHHHHHHHHHHHHHHHHHHHHH scheduling process pid=%u, sync_count=%lu", p->pid, p->sync_counter);
++	// sorouri
+ 	set_next_task_rt(rq, p, true);
+ 	return p;
+ }
