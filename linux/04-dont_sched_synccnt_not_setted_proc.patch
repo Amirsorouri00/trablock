@@ -1,0 +1,39 @@
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 69334e79ad52..5a881148801f 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1576,10 +1576,19 @@ static struct task_struct *pick_next_task_rt(struct rq *rq)
+ 
+ 	p = _pick_next_task_rt(rq);
+ 	// sorouri
+-	printk("HHHHHHHHHHHHHHHHHHHHHHHH scheduling process pid=%u, sync_count=%lu", p->pid, p->sync_counter);
++	if (p->sync_counter == 0)
++	{
++		set_next_task_rt(rq, p, true);
++		return p;
++	}
++	else
++	{
++		printk("HHHHHHHHHHHHHHHHHHHHHHHH scheduling process pid=%u, sync_count=%lu", p->pid, p->sync_counter);
++		return NULL;
++	}
+ 	// sorouri
+-	set_next_task_rt(rq, p, true);
+-	return p;
++	//set_next_task_rt(rq, p, true);
++	//return p;
+ }
+ 
+ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index 694cb0aa9a14..6d643e0274dd 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -279,6 +279,7 @@ static ssize_t process_vm_rw(pid_t pid,
+ 			printk("a reader has jut requested to block-free wait: %u %lu\n", pid, current->sync_counter);
+ 			current->sync_counter += liovcnt;
+ 			// maye adding some scheduling codes to release the CPU.
++			schedule();
+ 			return 0; //rc = 0;
+ 			//goto free_iovecs;
+ 		}
