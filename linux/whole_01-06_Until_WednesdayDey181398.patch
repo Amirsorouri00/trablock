@@ -1,0 +1,102 @@
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 467d26046416..268cde0b4fad 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1280,6 +1280,7 @@ struct task_struct {
+ 	unsigned long			lowest_stack;
+ 	unsigned long			prev_lowest_stack;
+ #endif
++	unsigned long			sync_counter;	// Sorouri 2
+ 
+ 	/*
+ 	 * New fields for task_struct should be added above here, so that
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index e591d40fd645..aeb6aff25673 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1575,8 +1575,23 @@ static struct task_struct *pick_next_task_rt(struct rq *rq)
+ 		return NULL;
+ 
+ 	p = _pick_next_task_rt(rq);
++	
+ 	set_next_task_rt(rq, p, true);
+-	return p;
++	// sorouri
++	if (p->sync_counter == 0)
++	{
++		return p;
++	}
++	else
++	{
++		printk("HHHHHHHHHHHHHHHHHHHHHHHH scheduling process pid=%u, sync_count=%lu", p->pid, p->sync_counter);
++		requeue_task_rt(rq, p, 0);
++
++		return NULL;
++	}
++	// sorouri
++	//set_next_task_rt(rq, p, true);
++	//return p;
+ }
+ 
+ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index 357aa7bef6c0..65f91e221227 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -265,10 +265,34 @@ static ssize_t process_vm_rw(pid_t pid,
+ 	struct iov_iter iter;
+ 	ssize_t rc;
+ 	int dir = vm_write ? WRITE : READ;
++	struct task_struct *target_task = NULL;
+ 
+ 	if (flags != 0)
+ 		return -EINVAL;
+ 
++	// sorouri
++
++	if (current->pid == pid)
++	{
++		if (dir == READ)
++		{
++			printk("a reader has jut requested to block-free wait: %u %lu\n", pid, current->sync_counter);
++			//current->sync_counter += liovcnt;
++			// maye adding some scheduling codes to release the CPU.
++			//schedule();
++			//return 0; //rc = 0;
++			//goto free_iovecs;
++		}
++		else {
++			printk("a writer has jut requested to block-free wait: %u %lu\n", pid, current->sync_counter);
++		}
++		current->sync_counter += liovcnt;
++		schedule();
++		return 0;
++	}
++
++	// sorouri
++
+ 	/* Check iovecs */
+ 	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter);
+ 	if (rc < 0)
+@@ -283,6 +307,21 @@ static ssize_t process_vm_rw(pid_t pid,
+ 
+ 	rc = process_vm_rw_core(pid, &iter, iov_r, riovcnt, flags, vm_write);
+ 
++	// change current_task_called to the target
++
++	if (dir == WRITE)
++	{
++		//current_task_called->sync_counter = current_task_called->sync_counter < riovcnt ? 0 : current_task_called->sync_counter - riovcnt;
++		printk("A writer with pid=%u has jut wrote inside a remote process with riovcnt = %lu.\n", pid, riovcnt);
++		target_task = find_task_by_vpid(pid);
++		target_task->sync_counter = target_task->sync_counter > riovcnt ? target_task->sync_counter - riovcnt : 0;
++	}
++	else {
++		printk("A reader with pid=%u has jut read from a remote process with riovcnt = %lu.\n", pid, riovcnt);
++		target_task = find_task_by_vpid(pid);
++		target_task->sync_counter = target_task->sync_counter > riovcnt ? target_task->sync_counter - riovcnt :0;
++	}
++
+ free_iovecs:
+ 	if (iov_r != iovstack_r)
+ 		kfree(iov_r);
