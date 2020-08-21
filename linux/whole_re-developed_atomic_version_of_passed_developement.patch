@@ -1,0 +1,91 @@
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 75765be82..775503573 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1268,8 +1268,6 @@ struct task_struct {
+ 	unsigned long			prev_lowest_stack;
+ #endif
+ 
+-	atomic_t			sync_counter;		// Sorouri
+-
+ 	/*
+ 	 * New fields for task_struct should be added above here, so that
+ 	 * they are included in the randomized portion of task_struct.
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index eb87c9e2a..9b8adc01b 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1576,20 +1576,7 @@ pick_next_task_rt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 
+ 	p = _pick_next_task_rt(rq);
+ 	set_next_task_rt(rq, p);
+-	// Sorouri
+-	if (p->sync_counter.counter <= 0) {
+-		if (p->sync_counter.counter < 0) {
+-			// printk("Kernel/sched/rt.c:pick_next_task_rt:sync_counter is negative-> pid=%u, sync_count=%lu", p->pid, p->sync_counter.counter);
+-			p->sync_counter.counter = 0;
+-		}
+-		return p;
+-	} else {
+-		// printk("Kernel/sched/rt.c:pick_next_task_rt:scheduling process pid=%u, sync_count=%lu", p->pid, p->sync_counter.counter);
+-		requeue_task_rt(rq, p, 0);
+-		return NULL;
+-	}
+-
+-	// return p;
++	return p;
+ }
+ 
+ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index 83a6c9e06..357aa7bef 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -265,31 +265,10 @@ static ssize_t process_vm_rw(pid_t pid,
+ 	struct iov_iter iter;
+ 	ssize_t rc;
+ 	int dir = vm_write ? WRITE : READ;
+-	struct task_struct *target_task = NULL;
+ 
+ 	if (flags != 0)
+ 		return -EINVAL;
+ 
+-	// Sorouri
+-	if (current->pid == pid) {
+-		// current->sync_counter.counter = 0;
+-		if (dir == READ) {
+-			// printk("a reader has jut requested to block-free wait: %u %lu\n", pid, current->sync_counter.counter);
+-
+-		} else {
+-			// printk("a writer has jut requested to block-free wait: %u %lu\n", pid, current->sync_counter.counter);
+-		}
+-		
+-		if (atomic_add_negative(liovcnt, &current->sync_counter) == false) {
+-			/* code */
+-			// printk("process_vm_access.c:process_vm_rw:atomic_add_negative: sync_counter = %lu, pid = %u.\n", current->sync_counter.counter, pid);
+-			schedule();
+-		} else {
+-			// printk("process_vm_access.c:process_vm_rw:error on atomic_add_negative occured.\n");
+-		}
+-		return 0;
+-	}
+-
+ 	/* Check iovecs */
+ 	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter);
+ 	if (rc < 0)
+@@ -304,15 +283,6 @@ static ssize_t process_vm_rw(pid_t pid,
+ 
+ 	rc = process_vm_rw_core(pid, &iter, iov_r, riovcnt, flags, vm_write);
+ 
+-	// Sorouri
+-	target_task = find_task_by_vpid(pid);
+-	if (dir == WRITE) {
+-		// printk("A writer with pid=%u has jut wrote inside a remote process with riovcnt = %lu.\n", pid, riovcnt);
+-	} else {
+-		// printk("A reader with pid=%u has jut read from a remote process with riovcnt = %lu.\n", pid, riovcnt);
+-	}
+-	int sub = atomic_sub_return(riovcnt, &target_task->sync_counter);
+-
+ free_iovecs:
+ 	if (iov_r != iovstack_r)
+ 		kfree(iov_r);
