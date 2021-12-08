@@ -12,7 +12,7 @@ index d19566bc9bc2..694cb0aa9a14 100644
 +	if (flags != 0)
 +		return -EINVAL;
  
- 	// sorouri
+ 	// 
  
 @@ -276,16 +279,13 @@ static ssize_t process_vm_rw(pid_t pid,
  			printk("a reader has jut requested to block-free wait: %u %lu\n", pid, current->sync_counter);
@@ -25,7 +25,7 @@ index d19566bc9bc2..694cb0aa9a14 100644
  		}
  	}
  
- 	// sorouri
+ 	// 
  
 -	if (flags != 0)
 -		return -EINVAL;

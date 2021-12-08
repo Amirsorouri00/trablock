@@ -6,9 +6,9 @@ index e591d40fd645..69334e79ad52 100644
  		return NULL;
  
  	p = _pick_next_task_rt(rq);
-+	// sorouri
++	// 
 +	printk("HHHHHHHHHHHHHHHHHHHHHHHH scheduling process pid=%u, sync_count=%lu", p->pid, p->sync_counter);
-+	// sorouri
++	// 
  	set_next_task_rt(rq, p, true);
  	return p;
  }

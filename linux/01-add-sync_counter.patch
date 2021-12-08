@@ -6,7 +6,7 @@ index 467d26046416..268cde0b4fad 100644
  	unsigned long			lowest_stack;
  	unsigned long			prev_lowest_stack;
  #endif
-+	unsigned long			sync_counter;	// Sorouri 2
++	unsigned long			sync_counter;	//  2
  
  	/*
  	 * New fields for task_struct should be added above here, so that
@@ -20,7 +20,7 @@ index 357aa7bef6c0..d19566bc9bc2 100644
  	int dir = vm_write ? WRITE : READ;
 +	//struct task_struct *current_task_called = NULL;
 +
-+	// sorouri
++	// 
 +
 +	if (current->pid == pid)
 +	{
@@ -34,7 +34,7 @@ index 357aa7bef6c0..d19566bc9bc2 100644
 +		}
 +	}
 +
-+	// sorouri
++	// 
  
  	if (flags != 0)
  		return -EINVAL;

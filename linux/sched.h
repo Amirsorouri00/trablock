@@ -1269,9 +1269,9 @@ struct task_struct {
 #endif
 
 	//static DEFINE_PER_CPU(local_t, sync_counters);
-    atomic_t                ipc_sched_syncher;  // Sorouri 1
-    int		                ipc_sched_synch;    // Sorouri 1
-    unsigned long           sync_count;         // Sorouri 1
+    atomic_t                ipc_sched_syncher;  //  1
+    int		                ipc_sched_synch;    //  1
+    unsigned long           sync_count;         //  1
 	
 	atomic_t				*sync_counters;
 	long int				*sync_cnts;

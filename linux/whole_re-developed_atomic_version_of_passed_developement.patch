@@ -6,7 +6,7 @@ index 75765be82..775503573 100644
  	unsigned long			prev_lowest_stack;
  #endif
  
--	atomic_t			sync_counter;		// Sorouri
+-	atomic_t			sync_counter;		// 
 -
  	/*
  	 * New fields for task_struct should be added above here, so that
@@ -19,7 +19,7 @@ index eb87c9e2a..9b8adc01b 100644
  
  	p = _pick_next_task_rt(rq);
  	set_next_task_rt(rq, p);
--	// Sorouri
+-	// 
 -	if (p->sync_counter.counter <= 0) {
 -		if (p->sync_counter.counter < 0) {
 -			// printk("Kernel/sched/rt.c:pick_next_task_rt:sync_counter is negative-> pid=%u, sync_count=%lu", p->pid, p->sync_counter.counter);

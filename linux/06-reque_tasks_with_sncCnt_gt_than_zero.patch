@@ -8,7 +8,7 @@ index 5a881148801f..aeb6aff25673 100644
  	p = _pick_next_task_rt(rq);
 +	
 +	set_next_task_rt(rq, p, true);
- 	// sorouri
+ 	// 
  	if (p->sync_counter == 0)
  	{
 -		set_next_task_rt(rq, p, true);
@@ -21,4 +21,4 @@ index 5a881148801f..aeb6aff25673 100644
 +
  		return NULL;
  	}
- 	// sorouri
+ 	// 

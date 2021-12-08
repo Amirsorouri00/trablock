@@ -6,7 +6,7 @@ index 467d26046416..268cde0b4fad 100644
  	unsigned long			lowest_stack;
  	unsigned long			prev_lowest_stack;
  #endif
-+	unsigned long			sync_counter;	// Sorouri 2
++	unsigned long			sync_counter;	//  2
  
  	/*
  	 * New fields for task_struct should be added above here, so that
@@ -21,7 +21,7 @@ index e591d40fd645..aeb6aff25673 100644
 +	
  	set_next_task_rt(rq, p, true);
 -	return p;
-+	// sorouri
++	// 
 +	if (p->sync_counter == 0)
 +	{
 +		return p;

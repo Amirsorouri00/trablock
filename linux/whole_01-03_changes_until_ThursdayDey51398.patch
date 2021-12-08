@@ -6,7 +6,7 @@ index 467d26046416..268cde0b4fad 100644
  	unsigned long			lowest_stack;
  	unsigned long			prev_lowest_stack;
  #endif
-+	unsigned long			sync_counter;	// Sorouri 2
++	unsigned long			sync_counter;	//  2
  
  	/*
  	 * New fields for task_struct should be added above here, so that
@@ -18,9 +18,9 @@ index e591d40fd645..69334e79ad52 100644
  		return NULL;
  
  	p = _pick_next_task_rt(rq);
-+	// sorouri
++	// 
 +	printk("HHHHHHHHHHHHHHHHHHHHHHHH scheduling process pid=%u, sync_count=%lu", p->pid, p->sync_counter);
-+	// sorouri
++	// 
  	set_next_task_rt(rq, p, true);
  	return p;
  }
@@ -37,7 +37,7 @@ index 357aa7bef6c0..694cb0aa9a14 100644
  	if (flags != 0)
  		return -EINVAL;
  
-+	// sorouri
++	// 
 +
 +	if (current->pid == pid)
 +	{
@@ -51,7 +51,7 @@ index 357aa7bef6c0..694cb0aa9a14 100644
 +		}
 +	}
 +
-+	// sorouri
++	// 
 +
  	/* Check iovecs */
  	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter);
