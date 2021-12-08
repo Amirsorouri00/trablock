@@ -34,8 +34,3 @@ This could is developed when kernel 5.14 was released.
 ---
 
 + [@amirsorouri00](https://www.github.com/amirsorouri00) for codebase and final model.
-
-**Donations**
----
-
-This is free, open-source software. If you'd like to support the development of future projects, or say thanks for this one, you can donate BTC at `1FnJ8hRRNUtUavngswUD21dsFNezYLX5y9`.
